@@ -45,10 +45,14 @@
             justify-content: center;
             margin-top: 20px;
             animation: fadeIn 1.5s ease-out;
+            width: 100%;
+            max-width: 1200px; /* Set max width to ensure centering */
+            padding: 0 10px;
         }
 
         .task-item {
             flex: 0 0 calc(50% - 20px);
+            max-width: 550px; /* Ensure no task item is too wide */
             border: 1px solid #ddd;
             padding: 20px;
             border-radius: 10px;

@@ -22,12 +22,12 @@
     .tasks {
       position: relative;
       margin-top: 40px;
-      padding-left: 100px; 
+      padding: 0 50px;
     }
 
     .task-card {
-      width: 100%;
-      padding: 20px; 
+      width: 45%;
+      padding: 20px;
       border-radius: 8px;
       background-color: #fff;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -35,29 +35,46 @@
       position: relative;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       animation: fadeIn 0.5s ease-in-out;
-      max-height: 250px; 
-      overflow: hidden; 
+      max-height: 250px;
+      overflow: hidden;
+      margin-left: auto;
+      margin-right: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between; /* Ensure equal space between elements */
+    }
+
+    .task-card:nth-child(even) {
+      margin-left: 55%;
+    }
+
+    .task-card:nth-child(odd) {
+      margin-right: 55%;
     }
 
     .task-card:hover {
-      transform: translateY(-10px);
+      transform: translateY(-10px) scale(1.05); /* Slightly enlarge on hover */
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     }
 
     .task-card h3 {
       font-size: 22px;
       color: #333;
-      margin-bottom: 15px; 
+      margin-bottom: 10px;
     }
 
     .task-card p {
       font-size: 16px;
       color: #555;
       margin-bottom: 10px;
+      line-height: 1.5;
     }
 
     .task-card .task-actions {
-      margin-top: 15px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: auto; /* Push the actions to the bottom */
     }
 
     .task-actions a {
@@ -108,25 +125,28 @@
 
     .timeline {
       position: absolute;
-      left: 50px;
+      left: 51%;
       top: 0;
       bottom: 0;
       width: 8px;
       background-color: #007bff;
       border-radius: 5px;
+      transform: translateX(-50%);
     }
 
     @media (max-width: 768px) {
       .task-card {
-        width: 100%;
+        width: 90%;
       }
 
-      .tasks {
-        padding-left: 50px; 
+      .task-card:nth-child(even), .task-card:nth-child(odd) {
+        margin-left: 0;
+        margin-right: 0;
       }
 
       .timeline {
-        left: 30px; 
+        left: 50%;
+        transform: translateX(-50%);
       }
     }
 
@@ -160,8 +180,6 @@
         <p><strong>Deadline:</strong> {{ task.deadline }}</p>
         <p><strong>Category:</strong> {{ task.category_name }}</p>
         <p><strong>Details:</strong> {{ task.details }}</p>
-        <p><strong>Need Reminder:</strong> {{ task.need_reminder }}</p>
-        <p><strong>Reminder Time (Minutes):</strong> {{ task.ddl_delta }}</p>
 
         <div class="task-actions">
           <a href="{{ url_for('tasks.edit_task', task_id=task.id) }}" class="edit-btn">Edit</a>
