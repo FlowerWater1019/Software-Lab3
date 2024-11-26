@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        .tasks {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .task-card {
+            width: calc(100% - 40px);
+            max-width: 400px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.5s forwards ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .task-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            background-color: #f0f8ff;
+        }
+
+        .task-card h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .task-card p {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .task-card .task-actions {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .task-actions a {
+            display: inline-block;
+            padding: 8px 15px;
+            margin: 5px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            color: white;
+            background-color: #28a745;
+            transition: background-color 0.3s ease;
+        }
+
+        .task-actions a:hover {
+            background-color: #218838;
+        }
+
+        .task-actions .delete-btn {
+            background-color: #dc3545;
+        }
+
+        .task-actions .delete-btn:hover {
+            background-color: #c82333;
+        }
+
+        @media (max-width: 768px) {
+            .task-card {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Task List</h1>
+
+    <div class="button-container">
+        <a href="{{ url_for('tasks.add_task') }}" class="button">Add New Task</a>
+        <a href="{{ url_for('categories.show_category') }}" class="button">Show Categories</a>
+        <a href="{{ url_for('categories.add_category') }}" class="button">Add Category</a>
+        <a href="{{ url_for('timeline.sort_timeline') }}" class="button">TimeLine</a>
+    </div>
+
+    <div class="tasks">
+        {% for task in tasks %}
+            <div class="task-card">
+                <h3>{{ task.name }}</h3>
+                <p><strong>Deadline:</strong> {{ task.deadline }}</p>
+                <p><strong>Category:</strong> {{ task.category_name }}</p>
+                <p><strong>Details:</strong> {{ task.details }}</p>
+                <p><strong>Need Reminder:</strong> {{ task.need_reminder }}</p>
+                <p><strong>Reminder Time (Minutes):</strong> {{ task.ddl_delta }}</p>
+
+                <div class="task-actions">
+                    <a href="{{ url_for('tasks.edit_task', task_id=task.id) }}">Edit</a>
+                    <a href="{{ url_for('tasks.delete_task', task_id=task.id) }}" onclick="return confirm('Are you sure?')" class="delete-btn">Delete</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        const tasks = [
+            {% for task in tasks %}
+            {
+                id: {{ task.id }},
+                name: "{{ task.name }}",
+                deadline: new Date("{{ task.deadline.isoformat() }}"),
+                category_id: {{ task.category_id }},
+                details: "{{ task.details }}",
+                need_reminder: "{{ task.need_reminder }}",
+                ddl_delta: {{ task.ddl_delta }}
+            },
+            {% endfor %}
+        ];
+
+        const filteredTasks = tasks.filter(task => task.need_reminder);
+
+        if (filteredTasks.length > 0) {
+            const now = new Date();
+            filteredTasks.forEach(task => {
+                const reminderTime = new Date(task.deadline.getTime() - task.ddl_delta * 60 * 1000);
+
+                if (now < reminderTime) {
+                    setTimeout(() => {
+                        alert(`Reminder: ${task.name} is due in ${task.ddl_delta} minutes!`);
+                    }, reminderTime - now);
+                } else if (now < task.deadline) {
+                    alert(`Reminder: ${task.name} is due now!`);
+                }
+            });
+        } else {
+            console.log('No tasks to remind.');
+        }
+    </script>
+</body>
+</html>

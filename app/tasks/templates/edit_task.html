@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Task</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #007BFF, #00C6FF);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        .form-container {
+            background-color: #ffffff;
+            padding: 30px 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+            animation: slideIn 0.7s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-container h1 {
+            text-align: center;
+            font-size: 26px;
+            color: #007BFF;
+            margin-bottom: 20px;
+        }
+
+        .form-container label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .form-container input,
+        .form-container textarea,
+        .form-container select {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-container input:focus,
+        .form-container textarea:focus,
+        .form-container select:focus {
+            outline: none;
+            border-color: #007BFF;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        .form-container textarea {
+            resize: none;
+            height: 100px;
+        }
+
+        .form-container button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #007BFF, #00C6FF);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .form-container button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3);
+        }
+
+        .form-container .cancel-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #007BFF;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .form-container .cancel-link:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 576px) {
+            .form-container {
+                padding: 20px 25px;
+            }
+
+            .form-container h1 {
+                font-size: 22px;
+            }
+
+            .form-container input,
+            .form-container textarea,
+            .form-container select {
+                font-size: 13px;
+            }
+
+            .form-container button {
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Edit Task</h1>
+        <form action="{{ url_for('tasks.edit_task', task_id=task.id) }}" method="POST">
+            <label for="name">Task Name:</label>
+            <input type="text" id="name" name="name" value="{{ task.name }}" placeholder="Enter task name" required>
+
+            <label for="deadline">Deadline:</label>
+            <input type="datetime-local" id="deadline" name="deadline" value="{{ task.deadline.strftime('%Y-%m-%dT%H:%M') }}" required>
+
+            <label for="category_id">Category:</label>
+            <select id="category_id" name="category_id">
+                {% for category in categories %}
+                <option value="{{ category.id }}" {% if category.id == task.category_id %}selected{% endif %}>{{ category.name }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="details">Details:</label>
+            <textarea id="details" name="details" rows="5" placeholder="Provide task details...">{{ task.details }}</textarea>
+            
+            <label for="need_reminder">Need Reminder:</label>
+            <select id="need_reminder" name="need_reminder">
+                <option value="True" {% if task.need_reminder %}selected{% endif %}>Yes</option>
+                <option value="False" {% if not task.need_reminder %}selected{% endif %}>No</option>
+            </select>
+
+            <label for="ddl_delta">Reminder Time (Minutes):</label>
+            <input type="number" id="ddl_delta" name="ddl_delta" value="{{ task.ddl_delta }}" placeholder="Enter reminder time" required>
+
+            <button type="submit">Update Task</button>
+        </form>
+        <a href="{{ url_for('tasks.index') }}" class="cancel-link">Cancel</a>
+    </div>
+</body>
+</html>

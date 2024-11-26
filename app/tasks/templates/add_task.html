@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Task</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #007BFF, #00C6FF);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        .form-container {
+            background-color: #ffffff;
+            padding: 25px 35px;
+            border-radius: 15px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 450px;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-container h1 {
+            text-align: center;
+            font-size: 26px;
+            margin-bottom: 20px;
+            color: #007BFF;
+        }
+
+        .form-container label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-container input,
+        .form-container textarea,
+        .form-container select {
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .form-container input:focus,
+        .form-container textarea:focus,
+        .form-container select:focus {
+            outline: none;
+            border-color: #007BFF;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        .form-container textarea {
+            resize: none;
+            height: 100px;
+        }
+
+        .form-container button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #007BFF, #00C6FF);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-container button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0, 123, 255, 0.3);
+        }
+
+        .form-container .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #007BFF;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .form-container .back-link:hover {
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Add a New Task</h1>
+        <form method="POST">
+            <label for="name">Task Name:</label>
+            <input type="text" name="name" id="name" placeholder="Enter task name" required>
+
+            <label for="deadline">Deadline:</label>
+            <input type="datetime-local" name="deadline" id="deadline" required>
+
+            <label for="details">Details:</label>
+            <textarea name="details" id="details" placeholder="Describe the task..."></textarea>
+        
+            <label for="category">Category:</label>
+            <select name="category_id">
+                {% for category in categories %}
+                <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+            
+            <label for="need_reminder">Need Reminder:</label>
+            <select name="need_reminder">
+                <option value="True">Yes</option>
+                <option value="False">No</option>
+            </select>
+
+            <label for="ddl_delta">Reminder Time (Minutes):</label>
+            <input type="number" name="ddl_delta" id="ddl_delta" placeholder="Enter minutes" required>
+            
+            <button type="submit">Add Task</button>
+        </form>
+
+        <a href="{{ url_for('tasks.index') }}" class="back-link">← Back to Task List</a>
+    </div>
+</body>
+</html>
