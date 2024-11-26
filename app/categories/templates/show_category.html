@@ -167,17 +167,14 @@
         <div class="category-card" onclick="window.location.href='/category/tasks/{{ category.id }}'">
             <div class="category-title">{{ category.name }}</div>
             <div class="task-count">Tasks: {{ category.task_count }}</div>
-
-            <form action="{{ url_for('categories.delete_category', category_id=category.id) }}" method="POST" style="display:inline;">
-                <button type="submit" class="delete-btn" onclick="return confirm('Are you sure you want to delete this category and all its tasks?')">Delete</button>
-            </form>
-        </div>
+        </div>        
         {% endfor %}
     </div><br>
 
     <div class="btn-container">
         <a href="/category/add" class="btn">Add Category</a>
         <a href="/" class="btn">Back to Task List</a>
+        <a href="/category/delete" class="btn">Delete Category</a>
     </div>
 </body>
 </html>

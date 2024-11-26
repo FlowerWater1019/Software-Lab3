@@ -27,10 +27,14 @@ def category_tasks(category_id):
     tasks = category.tasks
     return render_template('category_tasks.html', category=category, tasks=tasks)
 
-@categories_bp.route('/category/delete/<int:category_id>', methods=['POST', 'DELETE'])
-def delete_category(category_id):
-    category = Category.query.get(category_id)
-    db.session.delete(category)
-    db.session.commit()
-    flash('Category deleted successfully!')
-    return redirect(url_for('categories.show_category'))
+@categories_bp.route('/category/delete', methods=['POST', 'GET'])
+def delete_category():
+    categories = Category.query.all()
+    if request.method == 'POST':
+        category_id = request.form['category_id']
+        category = Category.query.get(category_id)
+        db.session.delete(category)
+        db.session.commit()
+        flash('Category deleted successfully!')
+        return redirect(url_for('categories.show_category'))
+    return render_template('delete_category.html', categories=categories)
